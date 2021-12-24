@@ -262,7 +262,7 @@ jobs:
                   name: Run tests
                   command: |
                       # Need to use `package` phase to get repo-test's jar build and shared to mongodb and jdbc repos
-                      mvn -pl '!gravitee-apim-console-webui, !gravitee-apim-portal-webui' -s .gravitee-snapshot.settings.xml package --no-transfer-progress -Dskip.validation=true -T 2C
+                      mvn -pl '!gravitee-apim-console-webui, !gravitee-apim-portal-webui' -s .gravitee-snapshot.settings.xml package --no-transfer-progress -Dskip.validation=true
             - run:
                   name: Save test results
                   command: |
