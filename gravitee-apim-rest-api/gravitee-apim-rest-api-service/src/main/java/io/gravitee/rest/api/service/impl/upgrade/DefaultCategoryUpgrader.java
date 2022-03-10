@@ -16,11 +16,11 @@
 package io.gravitee.rest.api.service.impl.upgrade;
 
 import io.gravitee.common.utils.IdGenerator;
+import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.repository.exceptions.TechnicalException;
 import io.gravitee.repository.management.api.ApiRepository;
 import io.gravitee.repository.management.api.CategoryRepository;
 import io.gravitee.repository.management.model.Category;
-import io.gravitee.rest.api.service.Upgrader;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
  * @author GraviteeSource Team
  */
 @Component
-public class DefaultCategoryUpgrader implements Upgrader, Ordered {
+public class DefaultCategoryUpgrader implements Upgrader {
 
     /**
      * Logger.

@@ -15,8 +15,8 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
+import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.rest.api.service.OrganizationService;
-import io.gravitee.rest.api.service.Upgrader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
  * @author GraviteeSource Team
  */
 @Component
-public class DefaultOrganizationUpgrader implements Upgrader, Ordered {
+public class DefaultOrganizationUpgrader implements Upgrader {
 
     /**
      * Logger.

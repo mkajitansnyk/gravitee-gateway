@@ -17,9 +17,9 @@ package io.gravitee.rest.api.service.impl.upgrade;
 
 import static io.gravitee.rest.api.service.impl.upgrade.UpgradeStatus.*;
 
+import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.rest.api.model.InstallationEntity;
 import io.gravitee.rest.api.service.InstallationService;
-import io.gravitee.rest.api.service.Upgrader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ import org.springframework.core.Ordered;
  *
  * @author GraviteeSource Team
  */
-public abstract class OneShotUpgrader implements Upgrader, Ordered {
+public abstract class OneShotUpgrader implements Upgrader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OneShotUpgrader.class);
 

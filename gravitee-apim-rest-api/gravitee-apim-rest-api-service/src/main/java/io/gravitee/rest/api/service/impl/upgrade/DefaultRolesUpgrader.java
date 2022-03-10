@@ -15,10 +15,10 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
+import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.rest.api.model.RoleEntity;
 import io.gravitee.rest.api.model.permissions.RoleScope;
 import io.gravitee.rest.api.service.RoleService;
-import io.gravitee.rest.api.service.Upgrader;
 import io.gravitee.rest.api.service.common.DefaultRoleEntityDefinition;
 import io.gravitee.rest.api.service.common.GraviteeContext;
 import java.util.Optional;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  * @author GraviteeSource Team
  */
 @Component
-public class DefaultRolesUpgrader implements Upgrader, Ordered {
+public class DefaultRolesUpgrader implements Upgrader {
 
     /**
      * Logger.

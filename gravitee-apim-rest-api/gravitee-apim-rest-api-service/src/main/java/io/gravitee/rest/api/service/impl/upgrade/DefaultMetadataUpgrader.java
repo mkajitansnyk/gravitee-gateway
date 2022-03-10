@@ -15,11 +15,11 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
+import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.rest.api.model.MetadataEntity;
 import io.gravitee.rest.api.model.MetadataFormat;
 import io.gravitee.rest.api.model.NewMetadataEntity;
 import io.gravitee.rest.api.service.MetadataService;
-import io.gravitee.rest.api.service.Upgrader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
  * @author GraviteeSource Team
  */
 @Component
-public class DefaultMetadataUpgrader implements Upgrader, Ordered {
+public class DefaultMetadataUpgrader implements Upgrader {
 
     /**
      * Logger.

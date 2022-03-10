@@ -17,14 +17,16 @@ package io.gravitee.rest.api.standalone.node;
 
 import io.gravitee.common.component.LifecycleComponent;
 import io.gravitee.node.api.NodeMetadataResolver;
+import io.gravitee.node.api.service.InitializerService;
+import io.gravitee.node.api.service.UpgraderService;
 import io.gravitee.node.container.AbstractNode;
 import io.gravitee.plugin.alert.AlertEventProducerManager;
 import io.gravitee.plugin.alert.AlertTriggerProviderManager;
-import io.gravitee.rest.api.service.InitializerService;
 import io.gravitee.rest.api.standalone.jetty.JettyEmbeddedContainer;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author David BRASSELY (david.brassely at graviteesource.com)
@@ -35,6 +37,9 @@ public class GraviteeApisNode extends AbstractNode {
 
     @Autowired
     private NodeMetadataResolver nodeMetadataResolver;
+
+    @Value("${upgrade.mode:true}")
+    private boolean upgradeMode;
 
     private Map<String, Object> metadata = null;
 
@@ -60,10 +65,15 @@ public class GraviteeApisNode extends AbstractNode {
     @Override
     public List<Class<? extends LifecycleComponent>> components() {
         final List<Class<? extends LifecycleComponent>> components = super.components();
-        components.add(InitializerService.class);
         components.add(JettyEmbeddedContainer.class);
         components.add(AlertTriggerProviderManager.class);
         components.add(AlertEventProducerManager.class);
+
+        if (upgradeMode) {
+            components.add(InitializerService.class);
+            components.add(UpgraderService.class);
+        }
+
         return components;
     }
 }

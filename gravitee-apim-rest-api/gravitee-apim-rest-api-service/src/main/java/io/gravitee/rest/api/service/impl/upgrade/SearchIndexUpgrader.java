@@ -16,6 +16,8 @@
 package io.gravitee.rest.api.service.impl.upgrade;
 
 import io.gravitee.common.data.domain.Page;
+import io.gravitee.node.api.upgrader.Initializer;
+import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.repository.management.api.EnvironmentRepository;
 import io.gravitee.repository.management.api.search.UserCriteria;
 import io.gravitee.repository.management.model.UserStatus;
@@ -46,7 +48,7 @@ import org.springframework.stereotype.Component;
  * @author GraviteeSource Team
  */
 @Component
-public class SearchIndexUpgrader implements Upgrader, Ordered {
+public class SearchIndexUpgrader implements Initializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchIndexUpgrader.class);
 
@@ -68,7 +70,7 @@ public class SearchIndexUpgrader implements Upgrader, Ordered {
     private final Map<String, String> organizationIdByEnvironmentIdMap = new ConcurrentHashMap<>();
 
     @Override
-    public boolean upgrade() {
+    public boolean initialize() {
         ExecutorService executorService = Executors.newFixedThreadPool(
             Runtime.getRuntime().availableProcessors() * 2,
             new ThreadFactory() {

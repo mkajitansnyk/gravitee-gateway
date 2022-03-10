@@ -15,8 +15,8 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
+import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.rest.api.model.configuration.identity.IdentityProviderActivationReferenceType;
-import io.gravitee.rest.api.service.Upgrader;
 import io.gravitee.rest.api.service.common.GraviteeContext;
 import io.gravitee.rest.api.service.configuration.identity.IdentityProviderActivationService;
 import io.gravitee.rest.api.service.configuration.identity.IdentityProviderActivationService.ActivationTarget;
@@ -28,7 +28,7 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IdentityProviderActivationUpgrader implements Upgrader, Ordered {
+public class IdentityProviderActivationUpgrader implements Upgrader {
 
     private final Logger logger = LoggerFactory.getLogger(IdentityProviderActivationUpgrader.class);
 

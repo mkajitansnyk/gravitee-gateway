@@ -15,11 +15,11 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
+import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.rest.api.model.*;
 import io.gravitee.rest.api.model.documentation.PageQuery;
 import io.gravitee.rest.api.service.ApiService;
 import io.gravitee.rest.api.service.PageService;
-import io.gravitee.rest.api.service.Upgrader;
 import io.gravitee.rest.api.service.common.GraviteeContext;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
  * @author GraviteeSource Team
  */
 @Component
-public class DocumentationSystemFolderUpgrader implements Upgrader, Ordered {
+public class DocumentationSystemFolderUpgrader implements Upgrader {
 
     /**
      * Logger.
