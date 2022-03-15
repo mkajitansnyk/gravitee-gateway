@@ -23,7 +23,6 @@ import io.gravitee.rest.api.service.InstallationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 
 /**
  * An upgrader that will run at APIM startup, only once.

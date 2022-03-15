@@ -18,7 +18,6 @@ package io.gravitee.rest.api.service.impl.upgrade;
 import io.gravitee.node.api.upgrader.Upgrader;
 import io.gravitee.rest.api.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 /**
