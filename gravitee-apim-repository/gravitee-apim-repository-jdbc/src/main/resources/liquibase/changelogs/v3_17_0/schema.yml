@@ -36,12 +36,12 @@ databaseChangeLog:
         # Upgrader
         ###############
         - createTable:
-            tableName: ${gravitee_prefix}upgrader_data
+            tableName: ${gravitee_prefix}upgrader_record
             columns:
               - column: { name: id, type: nvarchar(1024), constraints: { nullable: false } }
               - column: { name: applied_at, type: timestamp(6), constraints: { nullable: false } }
 
         - addPrimaryKey:
-            constraintName: pk_${gravitee_prefix}upgrader_data
+            constraintName: pk_${gravitee_prefix}upgrader_record
             columnNames: id
-            tableName: ${gravitee_prefix}upgrader_data
+            tableName: ${gravitee_prefix}upgrader_record

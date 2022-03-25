@@ -16,7 +16,7 @@
 package io.gravitee.repository.mongodb.management;
 
 import io.gravitee.node.api.UpgraderRepository;
-import io.gravitee.node.api.upgrader.UpgraderData;
+import io.gravitee.node.api.upgrader.UpgradeRecord;
 import io.gravitee.repository.mongodb.management.internal.upgrader.UpgraderMongoRepository;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
@@ -35,14 +35,14 @@ public class MongoUpgraderRepository implements UpgraderRepository {
     private UpgraderMongoRepository internalUpgraderMongoRepository;
 
     @Override
-    public Maybe<UpgraderData> findById(String id) {
-        Optional<UpgraderData> upgraderData = internalUpgraderMongoRepository.findById(id);
+    public Maybe<UpgradeRecord> findById(String id) {
+        Optional<UpgradeRecord> upgraderData = internalUpgraderMongoRepository.findById(id);
         return upgraderData.isPresent() ? Maybe.just(upgraderData.get()) : Maybe.empty();
     }
 
     @Override
-    public Single<UpgraderData> create(UpgraderData upgraderData) {
-        UpgraderData upgraderDataMongo = internalUpgraderMongoRepository.insert(upgraderData);
-        return Single.just(upgraderDataMongo);
+    public Single<UpgradeRecord> create(UpgradeRecord upgradeRecord) {
+        UpgradeRecord upgradeRecordMongo = internalUpgraderMongoRepository.insert(upgradeRecord);
+        return Single.just(upgradeRecordMongo);
     }
 }

@@ -15,7 +15,7 @@
  */
 package io.gravitee.repository.mongodb.management.internal.upgrader;
 
-import io.gravitee.node.api.upgrader.UpgraderData;
+import io.gravitee.node.api.upgrader.UpgradeRecord;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,4 +24,4 @@ import org.springframework.stereotype.Repository;
  * @author GraviteeSource Team
  */
 @Repository
-public interface UpgraderMongoRepository extends MongoRepository<UpgraderData, String> {}
+public interface UpgraderMongoRepository extends MongoRepository<UpgradeRecord, String> {}

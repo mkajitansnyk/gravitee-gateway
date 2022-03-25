@@ -16,7 +16,7 @@
 package io.gravitee.repository.jdbc.management;
 
 import io.gravitee.node.api.UpgraderRepository;
-import io.gravitee.node.api.upgrader.UpgraderData;
+import io.gravitee.node.api.upgrader.UpgradeRecord;
 import io.gravitee.repository.exceptions.TechnicalException;
 import io.gravitee.repository.jdbc.orm.JdbcObjectMapper;
 import io.reactivex.Maybe;
@@ -34,34 +34,34 @@ import org.springframework.stereotype.Repository;
  * @author GraviteeSource Team
  */
 @Repository
-public class JdbcUpgraderRepository extends JdbcAbstractRepository<UpgraderData> implements UpgraderRepository {
+public class JdbcUpgraderRepository extends JdbcAbstractRepository<UpgradeRecord> implements UpgraderRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcUpgraderRepository.class);
 
     JdbcUpgraderRepository(@Value("${management.jdbc.prefix:}") String tablePrefix) {
-        super(tablePrefix, "upgrader_data");
+        super(tablePrefix, "upgrader_record");
     }
 
     @Override
-    protected JdbcObjectMapper<UpgraderData> buildOrm() {
+    protected JdbcObjectMapper<UpgradeRecord> buildOrm() {
         return JdbcObjectMapper
-            .builder(UpgraderData.class, this.tableName, "id")
+            .builder(UpgradeRecord.class, this.tableName, "id")
             .addColumn("id", Types.NVARCHAR, String.class)
             .addColumn("applied_at", Types.TIMESTAMP, Date.class)
             .build();
     }
 
     @Override
-    public Maybe<UpgraderData> findById(String id) {
+    public Maybe<UpgradeRecord> findById(String id) {
         LOGGER.debug("JdbcUpgraderRepository.findByUpgraderId({})", id);
         try {
-            List<UpgraderData> upgraderDataList = jdbcTemplate.query(
+            List<UpgradeRecord> upgradeRecordList = jdbcTemplate.query(
                 getOrm().getSelectAllSql() + " where id = ? ",
                 getOrm().getRowMapper(),
                 id
             );
 
-            return upgraderDataList.stream().findFirst().map(Maybe::just).orElseGet(Maybe::empty);
+            return upgradeRecordList.stream().findFirst().map(Maybe::just).orElseGet(Maybe::empty);
         } catch (final Exception ex) {
             LOGGER.error("Failed to find upgrader data by id {}", id, ex);
             return Maybe.error(new TechnicalException("Failed to find upgrader data by id {}", ex));
@@ -69,12 +69,12 @@ public class JdbcUpgraderRepository extends JdbcAbstractRepository<UpgraderData>
     }
 
     @Override
-    public Single<UpgraderData> create(UpgraderData upgraderData) {
-        LOGGER.debug("JdbcUpgraderRepository.create({})", upgraderData);
+    public Single<UpgradeRecord> create(UpgradeRecord upgradeRecord) {
+        LOGGER.debug("JdbcUpgraderRepository.create({})", upgradeRecord);
         try {
-            jdbcTemplate.update(getOrm().buildInsertPreparedStatementCreator(upgraderData));
+            jdbcTemplate.update(getOrm().buildInsertPreparedStatementCreator(upgradeRecord));
 
-            return findById(upgraderData.getId()).toSingle();
+            return findById(upgradeRecord.getId()).toSingle();
         } catch (final Exception ex) {
             LOGGER.error("Failed to create upgrade data:", ex);
             return Single.error(new TechnicalException("Failed to create upgrade data", ex));

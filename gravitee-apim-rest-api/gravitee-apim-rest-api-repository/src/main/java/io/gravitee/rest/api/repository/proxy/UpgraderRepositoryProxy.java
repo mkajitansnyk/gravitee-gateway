@@ -16,7 +16,7 @@
 package io.gravitee.rest.api.repository.proxy;
 
 import io.gravitee.node.api.UpgraderRepository;
-import io.gravitee.node.api.upgrader.UpgraderData;
+import io.gravitee.node.api.upgrader.UpgradeRecord;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import org.springframework.stereotype.Component;
@@ -29,12 +29,12 @@ import org.springframework.stereotype.Component;
 public class UpgraderRepositoryProxy extends AbstractProxy<UpgraderRepository> implements UpgraderRepository {
 
     @Override
-    public Maybe<UpgraderData> findById(String id) {
+    public Maybe<UpgradeRecord> findById(String id) {
         return target.findById(id);
     }
 
     @Override
-    public Single<UpgraderData> create(UpgraderData upgraderData) {
-        return target.create(upgraderData);
+    public Single<UpgradeRecord> create(UpgradeRecord upgradeRecord) {
+        return target.create(upgradeRecord);
     }
 }
