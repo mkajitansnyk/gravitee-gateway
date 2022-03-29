@@ -15,7 +15,7 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
-import io.gravitee.node.api.upgrader.Upgrader;
+import io.gravitee.node.api.service.upgrader.Upgrader;
 import io.gravitee.rest.api.service.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

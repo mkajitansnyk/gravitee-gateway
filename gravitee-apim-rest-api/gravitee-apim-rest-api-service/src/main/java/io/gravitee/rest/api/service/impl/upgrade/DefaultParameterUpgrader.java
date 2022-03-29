@@ -15,7 +15,7 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
-import io.gravitee.node.api.upgrader.Upgrader;
+import io.gravitee.node.api.service.upgrader.Upgrader;
 import io.gravitee.repository.exceptions.TechnicalException;
 import io.gravitee.repository.management.api.ParameterRepository;
 import io.gravitee.repository.management.model.Parameter;

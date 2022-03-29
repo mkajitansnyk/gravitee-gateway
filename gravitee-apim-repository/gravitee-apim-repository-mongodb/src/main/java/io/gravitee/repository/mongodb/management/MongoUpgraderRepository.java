@@ -16,7 +16,7 @@
 package io.gravitee.repository.mongodb.management;
 
 import io.gravitee.node.api.UpgraderRepository;
-import io.gravitee.node.api.upgrader.UpgradeRecord;
+import io.gravitee.node.api.service.upgrader.UpgradeRecord;
 import io.gravitee.repository.mongodb.management.internal.upgrader.UpgraderMongoRepository;
 import io.reactivex.Maybe;
 import io.reactivex.Single;

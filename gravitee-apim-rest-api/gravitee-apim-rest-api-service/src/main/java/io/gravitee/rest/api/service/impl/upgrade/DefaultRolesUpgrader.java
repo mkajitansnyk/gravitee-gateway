@@ -15,7 +15,7 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
-import io.gravitee.node.api.upgrader.Upgrader;
+import io.gravitee.node.api.service.upgrader.Upgrader;
 import io.gravitee.rest.api.model.RoleEntity;
 import io.gravitee.rest.api.model.permissions.RoleScope;
 import io.gravitee.rest.api.service.RoleService;

@@ -15,7 +15,7 @@
  */
 package io.gravitee.rest.api.service.impl.upgrade;
 
-import io.gravitee.node.api.upgrader.Upgrader;
+import io.gravitee.node.api.service.upgrader.Upgrader;
 import io.gravitee.rest.api.model.*;
 import io.gravitee.rest.api.model.documentation.PageQuery;
 import io.gravitee.rest.api.service.ApiService;

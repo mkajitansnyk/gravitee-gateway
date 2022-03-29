@@ -19,7 +19,7 @@ import static io.gravitee.repository.management.model.DashboardReferenceType.*;
 import static java.lang.String.format;
 import static java.nio.charset.Charset.defaultCharset;
 
-import io.gravitee.node.api.upgrader.Upgrader;
+import io.gravitee.node.api.service.upgrader.Upgrader;
 import io.gravitee.repository.management.model.DashboardReferenceType;
 import io.gravitee.rest.api.model.DashboardEntity;
 import io.gravitee.rest.api.model.NewDashboardEntity;

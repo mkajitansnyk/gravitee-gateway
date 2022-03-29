@@ -16,7 +16,7 @@
 package io.gravitee.rest.api.service.impl.upgrade;
 
 import io.gravitee.common.data.domain.Page;
-import io.gravitee.node.api.upgrader.Upgrader;
+import io.gravitee.node.api.service.upgrader.Upgrader;
 import io.gravitee.repository.management.api.search.builder.PageableBuilder;
 import io.gravitee.rest.api.model.PageEntity;
 import io.gravitee.rest.api.model.common.Pageable;

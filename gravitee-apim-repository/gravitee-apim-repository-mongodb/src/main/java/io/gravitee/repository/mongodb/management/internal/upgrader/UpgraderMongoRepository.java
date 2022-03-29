@@ -15,7 +15,7 @@
  */
 package io.gravitee.repository.mongodb.management.internal.upgrader;
 
-import io.gravitee.node.api.upgrader.UpgradeRecord;
+import io.gravitee.node.api.service.upgrader.UpgradeRecord;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

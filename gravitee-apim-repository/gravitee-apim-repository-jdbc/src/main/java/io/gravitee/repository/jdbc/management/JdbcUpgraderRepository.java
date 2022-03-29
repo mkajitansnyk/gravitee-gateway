@@ -16,7 +16,7 @@
 package io.gravitee.repository.jdbc.management;
 
 import io.gravitee.node.api.UpgraderRepository;
-import io.gravitee.node.api.upgrader.UpgradeRecord;
+import io.gravitee.node.api.service.upgrader.UpgradeRecord;
 import io.gravitee.repository.exceptions.TechnicalException;
 import io.gravitee.repository.jdbc.orm.JdbcObjectMapper;
 import io.reactivex.Maybe;

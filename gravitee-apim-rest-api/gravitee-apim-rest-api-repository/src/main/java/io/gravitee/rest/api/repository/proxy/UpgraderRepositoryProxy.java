@@ -16,7 +16,7 @@
 package io.gravitee.rest.api.repository.proxy;
 
 import io.gravitee.node.api.UpgraderRepository;
-import io.gravitee.node.api.upgrader.UpgradeRecord;
+import io.gravitee.node.api.service.upgrader.UpgradeRecord;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import org.springframework.stereotype.Component;

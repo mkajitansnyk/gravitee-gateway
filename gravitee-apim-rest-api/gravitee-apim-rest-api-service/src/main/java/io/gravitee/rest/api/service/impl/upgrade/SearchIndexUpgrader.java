@@ -16,7 +16,7 @@
 package io.gravitee.rest.api.service.impl.upgrade;
 
 import io.gravitee.common.data.domain.Page;
-import io.gravitee.node.api.initializer.Initializer;
+import io.gravitee.node.api.service.initializer.Initializer;
 import io.gravitee.repository.management.api.EnvironmentRepository;
 import io.gravitee.repository.management.api.search.UserCriteria;
 import io.gravitee.repository.management.model.UserStatus;

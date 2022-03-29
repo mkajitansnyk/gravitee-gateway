@@ -18,7 +18,7 @@ package io.gravitee.rest.api.service.impl.upgrade;
 import static io.gravitee.rest.api.service.impl.upgrade.UpgradeStatus.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.gravitee.node.api.upgrader.Upgrader;
+import io.gravitee.node.api.service.upgrader.Upgrader;
 import io.gravitee.repository.management.api.ApiRepository;
 import io.gravitee.repository.management.model.Api;
 import io.gravitee.rest.api.model.InstallationEntity;

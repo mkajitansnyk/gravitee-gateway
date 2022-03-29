@@ -16,7 +16,7 @@
 package io.gravitee.rest.api.service.impl.upgrade;
 
 import io.gravitee.common.utils.IdGenerator;
-import io.gravitee.node.api.upgrader.Upgrader;
+import io.gravitee.node.api.service.upgrader.Upgrader;
 import io.gravitee.repository.exceptions.TechnicalException;
 import io.gravitee.repository.management.api.ApiRepository;
 import io.gravitee.repository.management.api.CategoryRepository;
