@@ -19,11 +19,9 @@ import static org.mockito.Mockito.*;
 
 import io.gravitee.rest.api.model.SubscriptionEntity;
 import io.gravitee.rest.api.model.SubscriptionStatus;
-import io.gravitee.rest.api.model.api.ApiEntity;
-import io.gravitee.rest.api.service.ApiService;
 import io.gravitee.rest.api.service.SubscriptionService;
+import io.gravitee.rest.api.service.common.GraviteeContext;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,13 +53,14 @@ public class ScheduledSubscriptionsServiceTest {
                     subscriptionQuery ->
                         subscriptionQuery.getStatuses().equals(Collections.singleton(SubscriptionStatus.ACCEPTED)) &&
                         subscriptionQuery.getEndingAtBefore() > 0
-                )
+                ),
+                eq(GraviteeContext.getExecutionContext())
             )
         )
             .thenReturn(new HashSet<>(Collections.singletonList(endDateInThePast)));
 
         service.run();
 
-        verify(subscriptionService, times(1)).close("end_date_in_the_past");
+        verify(subscriptionService, times(1)).close(GraviteeContext.getExecutionContext(), "end_date_in_the_past");
     }
 }

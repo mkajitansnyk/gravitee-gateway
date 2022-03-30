@@ -15,8 +15,6 @@
  */
 package io.gravitee.rest.api.management.rest.resource;
 
-import static io.gravitee.rest.api.model.MembershipMemberType.USER;
-import static io.gravitee.rest.api.model.MembershipReferenceType.API;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 
@@ -56,7 +54,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -126,7 +123,7 @@ public class ApiResource extends AbstractResource {
     )
     @ApiResponse(responseCode = "500", description = "Internal server error")
     public Response getApi() {
-        ApiEntity apiEntity = apiService.findById(api);
+        ApiEntity apiEntity = apiService.findById(GraviteeContext.getExecutionContext(), api);
 
         if (!canManageApi(apiEntity)) {
             throw new ForbiddenAccessException();
@@ -164,7 +161,7 @@ public class ApiResource extends AbstractResource {
     )
     @ApiResponse(responseCode = "500", description = "Internal server error")
     public Response getApiPicture(@Context Request request) throws ApiNotFoundException {
-        return getImageResponse(request, apiService.getPicture(api));
+        return getImageResponse(request, apiService.getPicture(GraviteeContext.getExecutionContext(), api));
     }
 
     @GET
@@ -177,7 +174,7 @@ public class ApiResource extends AbstractResource {
     )
     @ApiResponse(responseCode = "500", description = "Internal server error")
     public Response getApiBackground(@Context Request request) throws ApiNotFoundException {
-        return getImageResponse(request, apiService.getBackground(api));
+        return getImageResponse(request, apiService.getBackground(GraviteeContext.getExecutionContext(), api));
     }
 
     private Response getImageResponse(final Request request, InlinePictureEntity image) {
@@ -226,11 +223,11 @@ public class ApiResource extends AbstractResource {
         switch (action) {
             case START:
                 checkApiLifeCycle(apiEntity, action);
-                updatedApi = apiService.start(apiEntity.getId(), getAuthenticatedUser());
+                updatedApi = apiService.start(GraviteeContext.getExecutionContext(), apiEntity.getId(), getAuthenticatedUser());
                 break;
             case STOP:
                 checkApiLifeCycle(apiEntity, action);
-                updatedApi = apiService.stop(apiEntity.getId(), getAuthenticatedUser());
+                updatedApi = apiService.stop(GraviteeContext.getExecutionContext(), apiEntity.getId(), getAuthenticatedUser());
                 break;
             default:
                 updatedApi = null;
@@ -284,7 +281,7 @@ public class ApiResource extends AbstractResource {
             apiToUpdate.getProxy().setVirtualHosts(currentApi.getProxy().getVirtualHosts());
         }
 
-        final ApiEntity updatedApi = apiService.update(api, apiToUpdate, true);
+        final ApiEntity updatedApi = apiService.update(GraviteeContext.getExecutionContext(), api, apiToUpdate, true);
         setPictures(updatedApi);
 
         return Response
@@ -322,7 +319,7 @@ public class ApiResource extends AbstractResource {
     @ApiResponse(responseCode = "500", description = "Internal server error")
     @Permissions({ @Permission(value = RolePermission.API_DEFINITION, acls = RolePermissionAction.DELETE) })
     public Response deleteApi() {
-        apiService.delete(api);
+        apiService.delete(GraviteeContext.getExecutionContext(), api);
 
         return Response.noContent().build();
     }
@@ -343,7 +340,13 @@ public class ApiResource extends AbstractResource {
     @Permissions({ @Permission(value = RolePermission.API_DEFINITION, acls = RolePermissionAction.UPDATE) })
     public Response deployApi(@Parameter(name = "apiDeployment") @Valid final ApiDeploymentEntity apiDeploymentEntity) {
         try {
-            ApiEntity apiEntity = apiService.deploy(api, getAuthenticatedUser(), EventType.PUBLISH_API, apiDeploymentEntity);
+            ApiEntity apiEntity = apiService.deploy(
+                GraviteeContext.getExecutionContext(),
+                api,
+                getAuthenticatedUser(),
+                EventType.PUBLISH_API,
+                apiDeploymentEntity
+            );
             return Response
                 .ok(apiEntity)
                 .tag(Long.toString(apiEntity.getUpdatedAt().getTime()))
@@ -369,7 +372,7 @@ public class ApiResource extends AbstractResource {
     @ApiResponse(responseCode = "500", description = "Internal server error")
     @Permissions({ @Permission(value = RolePermission.API_DEFINITION, acls = RolePermissionAction.UPDATE) })
     public Response debugAPI(@Parameter(name = "request") @Valid final DebugApiEntity debugApiEntity) {
-        EventEntity apiEntity = debugApiService.debug(api, getAuthenticatedUser(), debugApiEntity);
+        EventEntity apiEntity = debugApiService.debug(GraviteeContext.getExecutionContext(), api, getAuthenticatedUser(), debugApiEntity);
         return Response.ok(apiEntity).build();
     }
 
@@ -408,7 +411,7 @@ public class ApiResource extends AbstractResource {
     @Permissions({ @Permission(value = RolePermission.API_DEFINITION, acls = RolePermissionAction.UPDATE) })
     public Response rollbackApi(@Parameter(name = "api", required = true) @Valid @NotNull final RollbackApiEntity apiEntity) {
         try {
-            ApiEntity rollbackedApi = apiService.rollback(api, apiEntity);
+            ApiEntity rollbackedApi = apiService.rollback(GraviteeContext.getExecutionContext(), api, apiEntity);
             return Response
                 .ok(rollbackedApi)
                 .tag(Long.toString(rollbackedApi.getUpdatedAt().getTime()))
@@ -435,11 +438,7 @@ public class ApiResource extends AbstractResource {
     @ApiResponse(responseCode = "500", description = "Internal server error")
     @Permissions({ @Permission(value = RolePermission.API_DEFINITION, acls = RolePermissionAction.UPDATE) })
     public Response updateApiWithDefinition(@Parameter(name = "definition", required = true) String apiDefinition) {
-        ApiEntity updatedApi = apiDuplicatorService.createWithImportedDefinition(
-            apiDefinition,
-            GraviteeContext.getCurrentOrganization(),
-            GraviteeContext.getCurrentEnvironment()
-        );
+        ApiEntity updatedApi = apiDuplicatorService.createWithImportedDefinition(GraviteeContext.getExecutionContext(), apiDefinition);
         return Response
             .ok(updatedApi)
             .tag(Long.toString(updatedApi.getUpdatedAt().getTime()))
@@ -465,10 +464,9 @@ public class ApiResource extends AbstractResource {
         final ApiEntity apiEntity = (ApiEntity) getApi().getEntity();
 
         ApiEntity updatedApi = apiDuplicatorService.updateWithImportedDefinition(
+            GraviteeContext.getExecutionContext(),
             apiEntity.getId(),
-            apiDefinition,
-            GraviteeContext.getCurrentOrganization(),
-            GraviteeContext.getCurrentEnvironment()
+            apiDefinition
         );
         return Response
             .ok(updatedApi)
@@ -496,8 +494,13 @@ public class ApiResource extends AbstractResource {
     public Response updateApiWithSwagger(
         @Parameter(name = "swagger", required = true) @Valid @NotNull ImportSwaggerDescriptorEntity swaggerDescriptor
     ) {
-        SwaggerApiEntity swaggerApiEntity = swaggerService.createAPI(swaggerDescriptor);
-        final ApiEntity updatedApi = apiService.updateFromSwagger(api, swaggerApiEntity, swaggerDescriptor);
+        SwaggerApiEntity swaggerApiEntity = swaggerService.createAPI(GraviteeContext.getExecutionContext(), swaggerDescriptor);
+        final ApiEntity updatedApi = apiService.updateFromSwagger(
+            GraviteeContext.getExecutionContext(),
+            api,
+            swaggerApiEntity,
+            swaggerDescriptor
+        );
         return Response
             .ok(updatedApi)
             .tag(Long.toString(updatedApi.getUpdatedAt().getTime()))
@@ -524,8 +527,17 @@ public class ApiResource extends AbstractResource {
         @Parameter(name = "swagger", required = true) @Valid @NotNull ImportSwaggerDescriptorEntity swaggerDescriptor,
         @QueryParam("definitionVersion") @DefaultValue("1.0.0") String definitionVersion
     ) {
-        SwaggerApiEntity swaggerApiEntity = swaggerService.createAPI(swaggerDescriptor, DefinitionVersion.valueOfLabel(definitionVersion));
-        final ApiEntity updatedApi = apiService.updateFromSwagger(api, swaggerApiEntity, swaggerDescriptor);
+        SwaggerApiEntity swaggerApiEntity = swaggerService.createAPI(
+            GraviteeContext.getExecutionContext(),
+            swaggerDescriptor,
+            DefinitionVersion.valueOfLabel(definitionVersion)
+        );
+        final ApiEntity updatedApi = apiService.updateFromSwagger(
+            GraviteeContext.getExecutionContext(),
+            api,
+            swaggerApiEntity,
+            swaggerDescriptor
+        );
         return Response
             .ok(updatedApi)
             .tag(Long.toString(updatedApi.getUpdatedAt().getTime()))
@@ -551,8 +563,8 @@ public class ApiResource extends AbstractResource {
         @QueryParam("version") @DefaultValue("default") String version,
         @QueryParam("exclude") @DefaultValue("") String exclude
     ) {
-        final ApiEntity apiEntity = apiService.findById(api);
-        final String apiDefinition = apiExportService.exportAsJson(api, version, exclude.split(","));
+        final ApiEntity apiEntity = apiService.findById(GraviteeContext.getExecutionContext(), api);
+        final String apiDefinition = apiExportService.exportAsJson(GraviteeContext.getExecutionContext(), api, version, exclude.split(","));
         return Response
             .ok(apiDefinition)
             .header(HttpHeaders.CONTENT_DISPOSITION, format("attachment;filename=%s", getExportFilename(apiEntity)))
@@ -587,7 +599,12 @@ public class ApiResource extends AbstractResource {
         @QueryParam("definitionVersion") @DefaultValue("1.0.0") String definitionVersion
     ) {
         final ApiEntity apiEntity = (ApiEntity) getApi().getEntity();
-        ApiEntity updatedApi = apiService.importPathMappingsFromPage(apiEntity, page, DefinitionVersion.valueOfLabel(definitionVersion));
+        ApiEntity updatedApi = apiService.importPathMappingsFromPage(
+            GraviteeContext.getExecutionContext(),
+            apiEntity,
+            page,
+            DefinitionVersion.valueOfLabel(definitionVersion)
+        );
         return Response
             .ok(updatedApi)
             .tag(Long.toString(updatedApi.getUpdatedAt().getTime()))
@@ -601,8 +618,8 @@ public class ApiResource extends AbstractResource {
     @Operation(summary = "Get the quality metrics of the API")
     public ApiQualityMetricsEntity getApiQualityMetrics() {
         canReadApi(api);
-        final ApiEntity apiEntity = apiService.findById(api);
-        return qualityMetricsService.getMetrics(apiEntity, GraviteeContext.getCurrentEnvironment());
+        final ApiEntity apiEntity = apiService.findById(GraviteeContext.getExecutionContext(), api);
+        return qualityMetricsService.getMetrics(GraviteeContext.getExecutionContext(), apiEntity);
     }
 
     @POST
@@ -628,7 +645,7 @@ public class ApiResource extends AbstractResource {
     @Operation(summary = "Get the portal API headers values")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ApiHeaderEntity> getPortalApiHeaders() {
-        return apiService.getPortalHeaders(api);
+        return apiService.getPortalHeaders(GraviteeContext.getExecutionContext(), api);
     }
 
     @POST
@@ -661,15 +678,18 @@ public class ApiResource extends AbstractResource {
         switch (action) {
             case ASK:
                 hasPermission(RolePermission.API_DEFINITION, api, RolePermissionAction.UPDATE);
-                updatedApi = apiService.askForReview(apiEntity.getId(), getAuthenticatedUser(), reviewEntity);
+                updatedApi =
+                    apiService.askForReview(GraviteeContext.getExecutionContext(), apiEntity.getId(), getAuthenticatedUser(), reviewEntity);
                 break;
             case ACCEPT:
                 hasPermission(RolePermission.API_REVIEWS, api, RolePermissionAction.UPDATE);
-                updatedApi = apiService.acceptReview(apiEntity.getId(), getAuthenticatedUser(), reviewEntity);
+                updatedApi =
+                    apiService.acceptReview(GraviteeContext.getExecutionContext(), apiEntity.getId(), getAuthenticatedUser(), reviewEntity);
                 break;
             case REJECT:
                 hasPermission(RolePermission.API_REVIEWS, api, RolePermissionAction.UPDATE);
-                updatedApi = apiService.rejectReview(apiEntity.getId(), getAuthenticatedUser(), reviewEntity);
+                updatedApi =
+                    apiService.rejectReview(GraviteeContext.getExecutionContext(), apiEntity.getId(), getAuthenticatedUser(), reviewEntity);
                 break;
             default:
                 updatedApi = null;
@@ -718,16 +738,7 @@ public class ApiResource extends AbstractResource {
     )
     public Response duplicateAPI(@Parameter(name = "api", required = true) @Valid @NotNull final DuplicateApiEntity duplicateApiEntity) {
         final ApiEntity apiEntity = (ApiEntity) getApi().getEntity(); // call this method to check READ permission on source API.
-        return Response
-            .ok(
-                apiDuplicatorService.duplicate(
-                    apiEntity,
-                    duplicateApiEntity,
-                    GraviteeContext.getCurrentOrganization(),
-                    GraviteeContext.getCurrentEnvironment()
-                )
-            )
-            .build();
+        return Response.ok(apiDuplicatorService.duplicate(GraviteeContext.getExecutionContext(), apiEntity, duplicateApiEntity)).build();
     }
 
     @POST
@@ -750,7 +761,7 @@ public class ApiResource extends AbstractResource {
         }
     )
     public Response migrateAPI() {
-        return Response.ok(apiService.migrate(this.api)).build();
+        return Response.ok(apiService.migrate(GraviteeContext.getExecutionContext(), this.api)).build();
     }
 
     @POST
@@ -769,7 +780,15 @@ public class ApiResource extends AbstractResource {
     @Permissions({ @Permission(value = RolePermission.API_DEFINITION, acls = RolePermissionAction.UPDATE) })
     public Response promoteAPI(@RequestBody @Valid @NotNull final PromotionRequestEntity promotionRequest) {
         return Response
-            .ok(promotionService.promote(GraviteeContext.getCurrentEnvironment(), this.api, promotionRequest, getAuthenticatedUser()))
+            .ok(
+                promotionService.promote(
+                    GraviteeContext.getExecutionContext(),
+                    GraviteeContext.getCurrentEnvironment(),
+                    this.api,
+                    promotionRequest,
+                    getAuthenticatedUser()
+                )
+            )
             .build();
     }
 
@@ -854,7 +873,7 @@ public class ApiResource extends AbstractResource {
     }
 
     private void setSynchronizationState(ApiStateEntity apiStateEntity) {
-        apiStateEntity.setIsSynchronized(apiService.isSynchronized(apiStateEntity.getApiId()));
+        apiStateEntity.setIsSynchronized(apiService.isSynchronized(GraviteeContext.getExecutionContext(), apiStateEntity.getApiId()));
     }
 
     private void checkApiLifeCycle(ApiEntity api, LifecycleAction action) {
@@ -872,7 +891,11 @@ public class ApiResource extends AbstractResource {
                     throw new BadRequestException("API is already stopped");
                 }
 
-                final boolean apiReviewEnabled = parameterService.findAsBoolean(Key.API_REVIEW_ENABLED, ParameterReferenceType.ENVIRONMENT);
+                final boolean apiReviewEnabled = parameterService.findAsBoolean(
+                    GraviteeContext.getExecutionContext(),
+                    Key.API_REVIEW_ENABLED,
+                    ParameterReferenceType.ENVIRONMENT
+                );
                 if (apiReviewEnabled) {
                     if (api.getWorkflowState() != null && !WorkflowState.REVIEW_OK.equals(api.getWorkflowState())) {
                         throw new BadRequestException("API can not be started without being reviewed");

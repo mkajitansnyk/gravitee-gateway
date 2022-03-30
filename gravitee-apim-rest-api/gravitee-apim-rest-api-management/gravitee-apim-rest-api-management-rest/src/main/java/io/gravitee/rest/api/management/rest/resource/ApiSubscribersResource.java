@@ -88,12 +88,12 @@ public class ApiSubscribersResource extends AbstractResource {
         SubscriptionQuery subscriptionQuery = new SubscriptionQuery();
         subscriptionQuery.setApi(api);
 
-        Collection<SubscriptionEntity> subscriptions = subscriptionService.search(subscriptionQuery);
+        Collection<SubscriptionEntity> subscriptions = subscriptionService.search(subscriptionQuery, GraviteeContext.getExecutionContext());
         return subscriptions
             .stream()
             .map(SubscriptionEntity::getApplication)
             .distinct()
-            .map(application -> applicationService.findById(GraviteeContext.getCurrentEnvironment(), application))
+            .map(application -> applicationService.findById(GraviteeContext.getExecutionContext(), application))
             .sorted((o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.getName(), o2.getName()))
             .collect(Collectors.toList());
     }

@@ -97,7 +97,7 @@ public class ApiPagesResource extends AbstractResource {
     ) {
         final String acceptedLocale = HttpHeadersUtil.getFirstAcceptedLocaleName(acceptLang);
 
-        final ApiEntity apiEntity = apiService.findById(api);
+        final ApiEntity apiEntity = apiService.findById(GraviteeContext.getExecutionContext(), api);
 
         if (
             Visibility.PUBLIC.equals(apiEntity.getVisibility()) ||
@@ -105,9 +105,9 @@ public class ApiPagesResource extends AbstractResource {
         ) {
             return pageService
                 .search(
+                    GraviteeContext.getCurrentEnvironment(),
                     new PageQuery.Builder().api(api).homepage(homepage).type(type).parent(parent).name(name).rootParent(rootParent).build(),
-                    translated ? acceptedLocale : null,
-                    GraviteeContext.getCurrentEnvironment()
+                    translated ? acceptedLocale : null
                 )
                 .stream()
                 .filter(page -> isDisplayable(apiEntity, page))
@@ -115,7 +115,9 @@ public class ApiPagesResource extends AbstractResource {
                     page -> {
                         // check if the page is used as GeneralCondition by an active Plan
                         // and update the PageEntity to transfer the information to the FrontEnd
-                        page.setGeneralConditions(pageService.isPageUsedAsGeneralConditions(page, api));
+                        page.setGeneralConditions(
+                            pageService.isPageUsedAsGeneralConditions(GraviteeContext.getExecutionContext(), page, api)
+                        );
                         return page;
                     }
                 )
@@ -145,7 +147,7 @@ public class ApiPagesResource extends AbstractResource {
         int order = pageService.findMaxApiPageOrderByApi(api) + 1;
         newPageEntity.setOrder(order);
         newPageEntity.setLastContributor(getAuthenticatedUser());
-        PageEntity newPage = pageService.createPage(api, newPageEntity, GraviteeContext.getCurrentEnvironment());
+        PageEntity newPage = pageService.createPage(GraviteeContext.getExecutionContext(), api, newPageEntity);
         if (newPage != null) {
             return Response.created(this.getLocationHeader(newPage.getId())).entity(newPage).build();
         }
@@ -169,7 +171,7 @@ public class ApiPagesResource extends AbstractResource {
     @Permissions({ @Permission(value = RolePermission.API_DOCUMENTATION, acls = RolePermissionAction.UPDATE) })
     public Response fetchAllApiPages() {
         String contributor = getAuthenticatedUser();
-        pageService.fetchAll(new PageQuery.Builder().api(api).build(), contributor, GraviteeContext.getCurrentEnvironment());
+        pageService.fetchAll(GraviteeContext.getExecutionContext(), new PageQuery.Builder().api(api).build(), contributor);
         return Response.noContent().build();
     }
 
@@ -192,7 +194,7 @@ public class ApiPagesResource extends AbstractResource {
     @Permissions({ @Permission(value = RolePermission.API_DOCUMENTATION, acls = RolePermissionAction.CREATE) })
     public List<PageEntity> importApiPageFiles(@Parameter(name = "page", required = true) @Valid @NotNull ImportPageEntity pageEntity) {
         pageEntity.setLastContributor(getAuthenticatedUser());
-        return pageService.importFiles(api, pageEntity, GraviteeContext.getCurrentEnvironment());
+        return pageService.importFiles(GraviteeContext.getExecutionContext(), api, pageEntity);
     }
 
     @PUT
@@ -211,13 +213,13 @@ public class ApiPagesResource extends AbstractResource {
         @Parameter(name = "page", required = true) @Valid @NotNull ImportPageEntity pageEntity
     ) {
         pageEntity.setLastContributor(getAuthenticatedUser());
-        return pageService.importFiles(api, pageEntity, GraviteeContext.getCurrentEnvironment());
+        return pageService.importFiles(GraviteeContext.getExecutionContext(), api, pageEntity);
     }
 
     private boolean isDisplayable(ApiEntity api, PageEntity page) {
         return (
             (isAuthenticated() && isAdmin()) ||
-            accessControlService.canAccessPageFromConsole(GraviteeContext.getCurrentEnvironment(), api, page)
+            accessControlService.canAccessPageFromConsole(GraviteeContext.getExecutionContext(), api, page)
         );
     }
 }

@@ -88,7 +88,7 @@ public class ApiPageResource extends AbstractResource {
     ) {
         final String acceptedLocale = HttpHeadersUtil.getFirstAcceptedLocaleName(acceptLang);
 
-        final ApiEntity apiEntity = apiService.findById(api);
+        final ApiEntity apiEntity = apiService.findById(GraviteeContext.getExecutionContext(), api);
 
         if (
             Visibility.PUBLIC.equals(apiEntity.getVisibility()) ||
@@ -98,10 +98,12 @@ public class ApiPageResource extends AbstractResource {
 
             // check if the page is used as GeneralCondition by an active Plan
             // and update the PageEntity to transfer the information to the FrontEnd
-            pageEntity.setGeneralConditions(pageService.isPageUsedAsGeneralConditions(pageEntity, api));
+            pageEntity.setGeneralConditions(
+                pageService.isPageUsedAsGeneralConditions(GraviteeContext.getExecutionContext(), pageEntity, api)
+            );
 
             if (portal) {
-                pageService.transformSwagger(pageEntity, api);
+                pageService.transformSwagger(GraviteeContext.getExecutionContext(), pageEntity, api);
                 if (!isAuthenticated() && pageEntity.getMetadata() != null) {
                     pageEntity.getMetadata().clear();
                 }
@@ -110,7 +112,7 @@ public class ApiPageResource extends AbstractResource {
                 if (pageEntity.getContentType() != null) {
                     String content = pageEntity.getContent();
                     try {
-                        pageService.validateSafeContent(pageEntity, api);
+                        pageService.validateSafeContent(GraviteeContext.getExecutionContext(), pageEntity, api);
                     } catch (SwaggerDescriptorException contentException) {
                         pageEntity.setMessages(singletonList(contentException.getMessage()));
                     } finally {
@@ -152,7 +154,7 @@ public class ApiPageResource extends AbstractResource {
 
         UpdatePageEntity updatePageEntity = new UpdatePageEntity();
         updatePageEntity.setContent(content);
-        PageEntity update = pageService.update(page, updatePageEntity, true);
+        PageEntity update = pageService.update(GraviteeContext.getExecutionContext(), page, updatePageEntity, true);
 
         return update.getContent();
     }
@@ -177,7 +179,7 @@ public class ApiPageResource extends AbstractResource {
         }
 
         updatePageEntity.setLastContributor(getAuthenticatedUser());
-        return pageService.update(page, updatePageEntity);
+        return pageService.update(GraviteeContext.getExecutionContext(), page, updatePageEntity);
     }
 
     @POST
@@ -198,7 +200,7 @@ public class ApiPageResource extends AbstractResource {
         pageService.findById(page);
         String contributor = getAuthenticatedUser();
 
-        return pageService.fetch(page, contributor);
+        return pageService.fetch(GraviteeContext.getExecutionContext(), page, contributor);
     }
 
     @PATCH
@@ -221,7 +223,7 @@ public class ApiPageResource extends AbstractResource {
         }
 
         updatePageEntity.setLastContributor(getAuthenticatedUser());
-        return pageService.update(page, updatePageEntity, true);
+        return pageService.update(GraviteeContext.getExecutionContext(), page, updatePageEntity, true);
     }
 
     @DELETE
@@ -237,13 +239,13 @@ public class ApiPageResource extends AbstractResource {
             throw new PageMarkdownTemplateActionException("Delete");
         }
 
-        pageService.delete(page);
+        pageService.delete(GraviteeContext.getExecutionContext(), page);
     }
 
     private boolean isDisplayable(ApiEntity api, PageEntity pageEntity) {
         return (
             (isAuthenticated() && isAdmin()) ||
-            accessControlService.canAccessPageFromConsole(GraviteeContext.getCurrentEnvironment(), api, pageEntity)
+            accessControlService.canAccessPageFromConsole(GraviteeContext.getExecutionContext(), api, pageEntity)
         );
     }
 

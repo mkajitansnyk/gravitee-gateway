@@ -94,7 +94,7 @@ public class PermissionsFilter implements ContainerRequestFilter {
                         case ORGANIZATION:
                             memberPermissions =
                                 membershipService.getUserMemberPermissions(
-                                    GraviteeContext.getCurrentEnvironment(),
+                                    GraviteeContext.getExecutionContext(),
                                     MembershipReferenceType.ORGANIZATION,
                                     GraviteeContext.getCurrentOrganization(),
                                     username
@@ -106,7 +106,7 @@ public class PermissionsFilter implements ContainerRequestFilter {
                         case ENVIRONMENT:
                             memberPermissions =
                                 membershipService.getUserMemberPermissions(
-                                    GraviteeContext.getCurrentEnvironment(),
+                                    GraviteeContext.getExecutionContext(),
                                     MembershipReferenceType.ENVIRONMENT,
                                     GraviteeContext.getCurrentEnvironment(),
                                     username
@@ -118,7 +118,7 @@ public class PermissionsFilter implements ContainerRequestFilter {
                         case APPLICATION:
                             ApplicationEntity application = getApplication(requestContext);
                             memberPermissions =
-                                membershipService.getUserMemberPermissions(GraviteeContext.getCurrentEnvironment(), application, username);
+                                membershipService.getUserMemberPermissions(GraviteeContext.getExecutionContext(), application, username);
                             if (roleService.hasPermission(memberPermissions, permission.value().getPermission(), permission.acls())) {
                                 return;
                             }
@@ -126,7 +126,7 @@ public class PermissionsFilter implements ContainerRequestFilter {
                         case API:
                             ApiEntity api = getApi(requestContext);
                             memberPermissions =
-                                membershipService.getUserMemberPermissions(GraviteeContext.getCurrentEnvironment(), api, username);
+                                membershipService.getUserMemberPermissions(GraviteeContext.getExecutionContext(), api, username);
                             if (roleService.hasPermission(memberPermissions, permission.value().getPermission(), permission.acls())) {
                                 return;
                             }
@@ -134,7 +134,7 @@ public class PermissionsFilter implements ContainerRequestFilter {
                         case GROUP:
                             GroupEntity group = getGroup(requestContext);
                             memberPermissions =
-                                membershipService.getUserMemberPermissions(GraviteeContext.getCurrentEnvironment(), group, username);
+                                membershipService.getUserMemberPermissions(GraviteeContext.getExecutionContext(), group, username);
                             if (roleService.hasPermission(memberPermissions, permission.value().getPermission(), permission.acls())) {
                                 return;
                             }
@@ -153,7 +153,7 @@ public class PermissionsFilter implements ContainerRequestFilter {
         if (apiId == null) {
             return null;
         }
-        return apiService.findById(apiId);
+        return apiService.findById(GraviteeContext.getExecutionContext(), apiId);
     }
 
     private GroupEntity getGroup(ContainerRequestContext requestContext) {
@@ -161,7 +161,7 @@ public class PermissionsFilter implements ContainerRequestFilter {
         if (groupId == null) {
             return null;
         }
-        return groupService.findById(GraviteeContext.getCurrentEnvironment(), groupId);
+        return groupService.findById(GraviteeContext.getExecutionContext(), groupId);
     }
 
     private ApplicationEntity getApplication(ContainerRequestContext requestContext) {
@@ -169,7 +169,7 @@ public class PermissionsFilter implements ContainerRequestFilter {
         if (applicationId == null) {
             return null;
         }
-        return applicationService.findById(GraviteeContext.getCurrentEnvironment(), applicationId);
+        return applicationService.findById(GraviteeContext.getExecutionContext(), applicationId);
     }
 
     private String getId(String key, ContainerRequestContext requestContext) {

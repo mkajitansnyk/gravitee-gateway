@@ -115,7 +115,11 @@ public class ApiSubscriptionResource extends AbstractResource {
         // Force subscription ID
         processSubscriptionEntity.setId(subscription);
 
-        SubscriptionEntity subscriptionEntity = subscriptionService.process(processSubscriptionEntity, getAuthenticatedUser());
+        SubscriptionEntity subscriptionEntity = subscriptionService.process(
+            GraviteeContext.getExecutionContext(),
+            processSubscriptionEntity,
+            getAuthenticatedUser()
+        );
         return Response.ok(convert(subscriptionEntity)).build();
     }
 
@@ -145,7 +149,7 @@ public class ApiSubscriptionResource extends AbstractResource {
         // Force ID
         updateSubscriptionEntity.setId(subscription);
 
-        SubscriptionEntity subscriptionEntity = subscriptionService.update(updateSubscriptionEntity);
+        SubscriptionEntity subscriptionEntity = subscriptionService.update(GraviteeContext.getExecutionContext(), updateSubscriptionEntity);
         return Response.ok(convert(subscriptionEntity)).build();
     }
 
@@ -172,13 +176,13 @@ public class ApiSubscriptionResource extends AbstractResource {
         ) SubscriptionStatus subscriptionStatus
     ) {
         if (CLOSED.equals(subscriptionStatus)) {
-            SubscriptionEntity updatedSubscriptionEntity = subscriptionService.close(subscription);
+            SubscriptionEntity updatedSubscriptionEntity = subscriptionService.close(GraviteeContext.getExecutionContext(), subscription);
             return Response.ok(convert(updatedSubscriptionEntity)).build();
         } else if (PAUSED.equals(subscriptionStatus)) {
-            SubscriptionEntity updatedSubscriptionEntity = subscriptionService.pause(subscription);
+            SubscriptionEntity updatedSubscriptionEntity = subscriptionService.pause(GraviteeContext.getExecutionContext(), subscription);
             return Response.ok(convert(updatedSubscriptionEntity)).build();
         } else if (RESUMED.equals(subscriptionStatus)) {
-            SubscriptionEntity updatedSubscriptionEntity = subscriptionService.resume(subscription);
+            SubscriptionEntity updatedSubscriptionEntity = subscriptionService.resume(GraviteeContext.getExecutionContext(), subscription);
             return Response.ok(convert(updatedSubscriptionEntity)).build();
         } else {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -214,7 +218,11 @@ public class ApiSubscriptionResource extends AbstractResource {
         // Force subscription ID
         transferSubscriptionEntity.setId(subscription);
 
-        SubscriptionEntity subscriptionEntity = subscriptionService.transfer(transferSubscriptionEntity, getAuthenticatedUser());
+        SubscriptionEntity subscriptionEntity = subscriptionService.transfer(
+            GraviteeContext.getExecutionContext(),
+            transferSubscriptionEntity,
+            getAuthenticatedUser()
+        );
         return Response.ok(convert(subscriptionEntity)).build();
     }
 
@@ -235,17 +243,17 @@ public class ApiSubscriptionResource extends AbstractResource {
         subscription.setSubscribedBy(
             new Subscription.User(
                 subscriptionEntity.getSubscribedBy(),
-                userService.findById(subscriptionEntity.getSubscribedBy(), true).getDisplayName()
+                userService.findById(GraviteeContext.getExecutionContext(), subscriptionEntity.getSubscribedBy(), true).getDisplayName()
             )
         );
         subscription.setClientId(subscriptionEntity.getClientId());
 
-        PlanEntity plan = planService.findById(subscriptionEntity.getPlan());
+        PlanEntity plan = planService.findById(GraviteeContext.getExecutionContext(), subscriptionEntity.getPlan());
         subscription.setPlan(new Subscription.Plan(plan.getId(), plan.getName()));
         subscription.getPlan().setSecurity(plan.getSecurity());
 
         ApplicationEntity application = applicationService.findById(
-            GraviteeContext.getCurrentEnvironment(),
+            GraviteeContext.getExecutionContext(),
             subscriptionEntity.getApplication()
         );
         subscription.setApplication(

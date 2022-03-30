@@ -30,8 +30,8 @@ import io.gravitee.rest.api.model.OrganizationEntity;
 import io.gravitee.rest.api.model.UpdateOrganizationEntity;
 import io.gravitee.rest.api.service.EventService;
 import io.gravitee.rest.api.service.RoleService;
+import io.gravitee.rest.api.service.common.GraviteeContext;
 import io.gravitee.rest.api.service.configuration.flow.FlowService;
-import io.gravitee.rest.api.service.impl.OrganizationServiceImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -85,7 +85,7 @@ public class OrganizationService_CreateTest {
         when(mockOrganizationRepository.create(any())).thenReturn(createdOrganization);
         when(mockFlowService.findByReference(FlowReferenceType.ORGANIZATION, "org_id")).thenReturn(new ArrayList<>());
 
-        OrganizationEntity organization = organizationService.createOrUpdate("org_id", org1);
+        OrganizationEntity organization = organizationService.createOrUpdate(GraviteeContext.getExecutionContext(), "org_id", org1);
 
         assertNotNull("result is null", organization);
         verify(mockOrganizationRepository, times(1))
@@ -99,8 +99,8 @@ public class OrganizationService_CreateTest {
                 )
             );
         verify(mockOrganizationRepository, never()).update(any());
-        verify(mockRoleService, times(1)).initialize("org_id");
-        verify(mockRoleService, times(1)).createOrUpdateSystemRoles("org_id");
+        verify(mockRoleService, times(1)).initialize(GraviteeContext.getExecutionContext(), "org_id");
+        verify(mockRoleService, times(1)).createOrUpdateSystemRoles(GraviteeContext.getExecutionContext(), "org_id");
         verify(mockFlowService, times(1)).save(FlowReferenceType.ORGANIZATION, "org_id", Arrays.asList());
     }
 
@@ -121,7 +121,7 @@ public class OrganizationService_CreateTest {
         when(mockOrganizationRepository.update(any())).thenReturn(createdOrganization);
         when(mockFlowService.findByReference(FlowReferenceType.ORGANIZATION, "org_id")).thenReturn(org1.getFlows());
 
-        OrganizationEntity organization = organizationService.createOrUpdate("org_id", org1);
+        OrganizationEntity organization = organizationService.createOrUpdate(GraviteeContext.getExecutionContext(), "org_id", org1);
 
         assertNotNull("result is null", organization);
         verify(mockOrganizationRepository, times(1))
@@ -135,8 +135,8 @@ public class OrganizationService_CreateTest {
                 )
             );
         verify(mockOrganizationRepository, never()).create(any());
-        verify(mockRoleService, never()).initialize("org_id");
-        verify(mockRoleService, never()).createOrUpdateSystemRoles("org_id");
+        verify(mockRoleService, never()).initialize(GraviteeContext.getExecutionContext(), "org_id");
+        verify(mockRoleService, never()).createOrUpdateSystemRoles(GraviteeContext.getExecutionContext(), "org_id");
         verify(mockFlowService, times(1)).save(FlowReferenceType.ORGANIZATION, "org_id", org1.getFlows());
     }
 }
