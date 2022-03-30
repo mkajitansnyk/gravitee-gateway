@@ -778,7 +778,12 @@ public class UserServiceImpl extends AbstractService implements UserService, Ini
                 case ENVIRONMENT:
                     membershipService.addRoleToMemberOnReference(
                         executionContext,
-                        new MembershipService.MembershipReference(MembershipReferenceType.ENVIRONMENT, executionContext.getEnvironmentId()),
+                        new MembershipService.MembershipReference(
+                            MembershipReferenceType.ENVIRONMENT,
+                            executionContext.hasEnvironmentId()
+                                ? executionContext.getEnvironmentId()
+                                : GraviteeContext.getDefaultEnvironment()
+                        ),
                         new MembershipService.MembershipMember(user.getId(), null, MembershipMemberType.USER),
                         new MembershipService.MembershipRole(RoleScope.ENVIRONMENT, defaultRoleByScope.getName())
                     );
@@ -1762,10 +1767,19 @@ public class UserServiceImpl extends AbstractService implements UserService, Ini
                 .forEach(
                     roleEntity -> {
                         if (roleEntity.getScope().equals(RoleScope.ENVIRONMENT)) {
-                            Set<RoleEntity> envRoles = rolesToAddToEnvironments.get(executionContext.getEnvironmentId());
+                            Set<RoleEntity> envRoles = rolesToAddToEnvironments.get(
+                                executionContext.hasEnvironmentId()
+                                    ? executionContext.getEnvironmentId()
+                                    : GraviteeContext.getDefaultEnvironment()
+                            );
                             if (envRoles == null) {
                                 envRoles = new HashSet<>();
-                                rolesToAddToEnvironments.put(executionContext.getEnvironmentId(), envRoles);
+                                rolesToAddToEnvironments.put(
+                                    executionContext.hasEnvironmentId()
+                                        ? executionContext.getEnvironmentId()
+                                        : GraviteeContext.getDefaultEnvironment(),
+                                    envRoles
+                                );
                             }
                             envRoles.add(roleEntity);
                         } else if (roleEntity.getScope().equals(RoleScope.ORGANIZATION)) {

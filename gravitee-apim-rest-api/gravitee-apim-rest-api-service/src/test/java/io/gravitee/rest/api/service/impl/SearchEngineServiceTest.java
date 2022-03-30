@@ -531,7 +531,7 @@ public class SearchEngineServiceTest {
                 ApiEntity apiEntity = new ApiEntity();
                 apiEntity.setId("api-" + i);
                 labels.add("In Review " + i);
-                apiEntity.setReferenceId(GraviteeContext.getCurrentEnvironmentOrDefault());
+                apiEntity.setReferenceId(GraviteeContext.getCurrentEnvironment());
                 apiEntity.setReferenceType(GraviteeContext.ReferenceContextType.ENVIRONMENT.name());
                 apiEntity.setName(apiName);
                 apiEntity.setUpdatedAt(new Date());
@@ -573,7 +573,7 @@ public class SearchEngineServiceTest {
             pageEntity.setReferenceType("API");
             pageEntity.setReferenceId("api-" + i);
         } else {
-            pageEntity.setReferenceId(GraviteeContext.getCurrentEnvironmentOrDefault());
+            pageEntity.setReferenceId(GraviteeContext.getCurrentEnvironment());
             pageEntity.setReferenceType(GraviteeContext.ReferenceContextType.ENVIRONMENT.name());
         }
 

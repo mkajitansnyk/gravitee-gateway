@@ -26,6 +26,7 @@ import io.gravitee.rest.api.model.command.CommandTags;
 import io.gravitee.rest.api.model.command.NewCommandEntity;
 import io.gravitee.rest.api.service.CommandService;
 import io.gravitee.rest.api.service.common.ExecutionContext;
+import io.gravitee.rest.api.service.common.GraviteeContext;
 import io.gravitee.rest.api.service.common.UuidString;
 import io.gravitee.rest.api.service.exceptions.Message2RecipientNotFoundException;
 import io.gravitee.rest.api.service.exceptions.TechnicalManagementException;
@@ -62,7 +63,9 @@ public class CommandServiceImpl extends AbstractService implements CommandServic
 
         Command command = new Command();
         command.setId(UuidString.generateRandom());
-        command.setEnvironmentId(executionContext.getEnvironmentId());
+        command.setEnvironmentId(
+            executionContext.hasEnvironmentId() ? executionContext.getEnvironmentId() : GraviteeContext.getDefaultEnvironment()
+        );
         command.setFrom(node.id());
         command.setTo(messageEntity.getTo());
         command.setTags(convert(messageEntity.getTags()));
