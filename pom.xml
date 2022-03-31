@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (C) 2015 The Gravitee team (http://gravitee.io)
@@ -112,7 +112,7 @@
         <jmh.version>1.33</jmh.version>
         <json-patch.version>1.13</json-patch.version>
         <json-path.version>2.6.0</json-path.version>
-        <json-smart.version>2.4.7</json-smart.version>
+        <json-smart.version>2.4.8</json-smart.version>
         <jsoup.version>1.14.3</jsoup.version>
         <lucene.version>7.7.3</lucene.version>
         <netty-tcnative-boringssl-static.version>2.0.46.Final</netty-tcnative-boringssl-static.version>
@@ -873,8 +873,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine
-                    >@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
+                    <argLine>@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
                         --add-opens java.base/java.util.regex=ALL-UNNAMED --add-opens
                         java.base/java.util.stream=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED
                     </argLine>
