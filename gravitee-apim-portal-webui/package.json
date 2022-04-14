@@ -35,7 +35,7 @@
     "@angular/platform-browser-dynamic": "13.3.0",
     "@angular/router": "13.3.0",
     "@asyncapi/web-component": "1.0.0-next.15",
-    "@fontsource/ibm-plex-sans": "^4.5.5",
+    "@fontsource/ibm-plex-sans": "^4.5.7",
     "@gravitee/ui-components": "3.33.1",
     "@highcharts/map-collection": "^2.0.0",
     "@ngx-translate/core": "14.0.0",
