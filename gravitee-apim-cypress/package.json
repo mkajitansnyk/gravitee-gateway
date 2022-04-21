@@ -27,7 +27,7 @@
         "@types/node": "16.10.9",
         "ansi-regex": "6.0.1",
         "cypress": "9.5.0",
-        "cypress-terminal-report": "3.4.1",
+        "cypress-terminal-report": "3.4.2",
         "har-validator": "5.1.5",
         "jsonwebtoken": "8.5.1",
         "license-check-and-add": "4.0.3",
