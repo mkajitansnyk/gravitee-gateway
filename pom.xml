@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (C) 2015 The Gravitee team (http://gravitee.io)
@@ -88,7 +88,7 @@
         <commons-pool2.version>2.11.1</commons-pool2.version>
         <commons-text.version>1.9</commons-text.version>
         <dozer.version>6.5.2</dozer.version>
-        <everit-json-schema.version>1.14.0</everit-json-schema.version>
+        <everit-json-schema.version>1.14.1</everit-json-schema.version>
         <flexmark.version>0.62.2</flexmark.version>
         <freemarker.version>2.3.31</freemarker.version>
         <gatling-charts-highcharts.version>3.7.4</gatling-charts-highcharts.version>
@@ -873,8 +873,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine
-                    >@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
+                    <argLine>@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
                         --add-opens java.base/java.util.regex=ALL-UNNAMED --add-opens
                         java.base/java.util.stream=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED
                     </argLine>
