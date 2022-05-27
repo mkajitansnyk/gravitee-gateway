@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (C) 2015 The Gravitee team (http://gravitee.io)
@@ -62,7 +62,7 @@
         <gravitee-alert-api.version>1.9.0</gravitee-alert-api.version>
         <gravitee-cockpit-api.version>1.10.0</gravitee-cockpit-api.version>
         <gravitee-common.version>1.25.0</gravitee-common.version>
-        <gravitee-connector-api.version>1.1.0</gravitee-connector-api.version>
+        <gravitee-connector-api.version>1.1.1</gravitee-connector-api.version>
         <gravitee-definition.version>1.33.0</gravitee-definition.version>
         <gravitee-expression-language.version>1.9.1</gravitee-expression-language.version>
         <gravitee-fetcher-api.version>1.4.0</gravitee-fetcher-api.version>
@@ -873,8 +873,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine
-                    >@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
+                    <argLine>@{argLine} --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
                         --add-opens java.base/java.util.regex=ALL-UNNAMED --add-opens
                         java.base/java.util.stream=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED
                     </argLine>
