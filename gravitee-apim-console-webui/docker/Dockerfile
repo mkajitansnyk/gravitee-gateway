@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-FROM nginx:1.21-alpine
+FROM nginx:stable-alpine
 LABEL maintainer="contact@graviteesource.com"
 
 ARG GRAVITEEIO_VERSION=0
